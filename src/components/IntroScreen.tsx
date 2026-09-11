@@ -81,16 +81,21 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({
           variants={containerAnimation}
           initial="hidden"
           animate="visible"
+          aria-label={title}
           className="font-heading font-extrabold text-4xl sm:text-6xl md:text-7xl tracking-tight text-white drop-shadow-2xl flex flex-wrap justify-center leading-[1.08] max-w-4xl"
         >
-          {title.split('').map((char, index) => (
-            <motion.span
-              key={index}
-              variants={letterAnimation}
-              className={char === ' ' ? 'w-3 sm:w-4' : ''}
-            >
-              {char}
-            </motion.span>
+          {/* Letters are grouped per word so a line can only break between words, never inside one */}
+          {title.split(' ').map((word, wordIndex, words) => (
+            <React.Fragment key={wordIndex}>
+              <span className="inline-flex whitespace-nowrap" aria-hidden="true">
+                {word.split('').map((char, charIndex) => (
+                  <motion.span key={charIndex} variants={letterAnimation}>
+                    {char}
+                  </motion.span>
+                ))}
+              </span>
+              {wordIndex < words.length - 1 && <span className="w-3 sm:w-4" aria-hidden="true" />}
+            </React.Fragment>
           ))}
         </motion.h1>
 
